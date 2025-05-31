@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Movie
+from .models import WatchList,StreamingService
 
-# class MovieSerializer(serializers.Serializer):
+# class WatchListSerializer(serializers.Serializer):
 #     id= serializers.IntegerField(read_only=True)
 #     title = serializers.CharField()
 #     description = serializers.CharField()
@@ -10,12 +10,12 @@ from .models import Movie
 
 #     def create(self, value):
 #         """
-#         Create and return a new `Movie` instance, given the validated data.
+#         Create and return a new `WatchList` instance, given the validated data.
 #         """
-#         return Movie.objects.create(**value)
+#         return WatchList.objects.create(**value)
 #     def update(self, instance, value):
 #         """
-#         Update and return an existing `Movie` instance, given the validated data.
+#         Update and return an existing `WatchList` instance, given the validated data.
 #         """
 
 #         instance.title = value.get('title', instance.title)
@@ -41,27 +41,37 @@ from .models import Movie
 #             raise serializers.ValidationError("title must be at least 4 character long.")
 #         return value
 
-class MovieSerializer(serializers.ModelSerializer):
-    length=serializers.SerializerMethodField()
-    def get_length(self, obj):
-        return len(obj.title) 
+class WatchListSerializer(serializers.ModelSerializer):
+    # length=serializers.SerializerMethodField()
+    # def get_length(self, obj):
+    #     return len(obj.title) 
     
     class Meta:
-        model = Movie
+        model = WatchList
         # fields = [ 'id','title', 'description','rating', 'gross_revenue']
-        exclude = [ 'id',]
-        # fields= '__all__'
-        # read_only_fields = ['id']
+        # exclude = [ 'id',]
+        fields= '__all__'
+        read_only_fields = ['id']
     
-    def validate(self, data):
-#         """
-#         Check that the rating is between 0 and 10.
-#         """
-        if data['rating'] < 0 or data['rating'] > 10:
-            raise serializers.ValidationError("Rating must be between 0 and 10.")
-        return data
+#     def validate(self, data):
+# #         """
+# #         Check that the rating is between 0 and 10.
+# #         """
+#         if data['rating'] < 0 or data['rating'] > 10:
+#             raise serializers.ValidationError("Rating must be between 0 and 10.")
+#         return data
     
-    def validate_title(self, value):
-        if len(value) < 4:
-            raise serializers.ValidationError("Title must be at least 4 characters long.")
-        return value
+#     def validate_title(self, value):
+#         if len(value) < 4:
+#             raise serializers.ValidationError("Title must be at least 4 characters long.")
+#         return value
+class StreamingServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StreamingService
+        fields = '__all__'
+        read_only_fields = ['id']
+    
+    # def validate_name(self, value):
+    #     if len(value) < 3:
+    #         raise serializers.ValidationError("Name must be at least 3 characters long.")
+    #     return value
