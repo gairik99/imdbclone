@@ -4,50 +4,49 @@ from .serializers import WatchListSerializer,StreamingServiceSerializer,ReviewSe
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework import mixins
+# from rest_framework import mixins
 from rest_framework import generics
 
 
 
 # Create your views here.
-class ReviewDetail(mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   generics.GenericAPIView):
+# class ReviewDetail(mixins.RetrieveModelMixin,
+#                    mixins.UpdateModelMixin,
+#                    mixins.DestroyModelMixin,
+#                    generics.GenericAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
+
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
+
+#     def delete(self, request, *args, **kwargs):
+#         return self.destroy(request, *args, **kwargs)
+
+class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+class ReviewList(generics.ListCreateAPIView):
+      queryset = Review.objects.all()
+      serializer_class = ReviewSerializer
 
 
+# class ReviewList(mixins.ListModelMixin,
+#                   mixins.CreateModelMixin,
+#                   generics.GenericAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
 
-class ReviewList(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  generics.GenericAPIView):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-    
-    # def get(self, request, *args, **kwargs):
-    #     response = self.list(request, *args, **kwargs)
-    #     return Response(response.data, status=status.HTTP_200_OK)
-
-    # def post(self, request, *args, **kwargs):
-    #     response = self.create(request, *args, **kwargs)
-    #     return Response(response.data, status=status.HTTP_201_CREATED)
-
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
 
 
 @api_view(['GET','POST'])
@@ -69,13 +68,13 @@ def get_watchlists(request):
 
 
 @api_view(['GET','PUT','DELETE'])
-def get_watchlist(request, watchList_id):
+def get_watchlist(request, watchlist_id):
     try:
-        WatchList = WatchList.objects.get(id=watchList_id)
+        watchlist = WatchList.objects.get(id=watchlist_id)
     except WatchList.DoesNotExist:
         return Response({'error': 'WatchList not found'}, status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
-        try:
+  
             # WatchList = WatchList.objects.get(id=WatchList_id)
             # data = {
             #     'title': WatchList.title,
@@ -85,29 +84,24 @@ def get_watchlist(request, watchList_id):
             #     'gross_revenue': WatchList.gross_revenue,
             #     'WatchList_id': WatchList.id
             # }
-            serializer = WatchListSerializer(WatchList)
+            serializer = WatchListSerializer(watchlist)
             return Response(serializer.data,status=status.HTTP_200_OK)
-        except WatchList.DoesNotExist:
-            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         
     if request.method == 'PUT':
-        try:
+     
             # WatchList = WatchList.objects.get(id=WatchList_id)
-            serializer = WatchListSerializer(WatchList, data=request.data)
+            serializer = WatchListSerializer(watchlist, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)                                                    
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except WatchList.DoesNotExist:
-            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        
         
     if request.method == 'DELETE':
-        try:
             # WatchList = WatchList.objects.get(id=WatchList_id)
-            WatchList.delete()
+            watchlist.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except WatchList.DoesNotExist:
-            return Response(serializer.errors, status=status.HTTP_204_NO_CONTENT)
+      
         
 
 @api_view(['GET','POST'])

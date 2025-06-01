@@ -41,6 +41,11 @@ from .models import WatchList,StreamingService, Review
 #             raise serializers.ValidationError("title must be at least 4 character long.")
 #         return value
 
+class SimpleWatchListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WatchList
+        fields = '__all__'
+        read_only_fields = ['id']
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,7 +80,7 @@ class WatchListSerializer(serializers.ModelSerializer):
 
 
 class StreamingServiceSerializer(serializers.ModelSerializer):
-    watchlists = WatchListSerializer(many=True, read_only=True)
+    watchlists = SimpleWatchListSerializer(many=True, read_only=True)
     # watchlists=serializers.StringRelatedField(
     #     many=True,
     #     read_only=True
