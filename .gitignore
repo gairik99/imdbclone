@@ -1,1 +1,12 @@
 *.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Migrations (optional if you don’t want to track them initially)
+**/migrations/*.py
+**/migrations/__pycache__/
