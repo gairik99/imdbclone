@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import WatchList,StreamingService
+from .models import WatchList,StreamingService, Review
 
 # class WatchListSerializer(serializers.Serializer):
 #     id= serializers.IntegerField(read_only=True)
@@ -41,11 +41,18 @@ from .models import WatchList,StreamingService
 #             raise serializers.ValidationError("title must be at least 4 character long.")
 #         return value
 
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only_fields = ['id']
+
 class WatchListSerializer(serializers.ModelSerializer):
     # length=serializers.SerializerMethodField()
     # def get_length(self, obj):
     #     return len(obj.title) 
-    
+    reviews= ReviewSerializer(many=True, read_only=True)
     class Meta:
         model = WatchList
         # fields = [ 'id','title', 'description','rating', 'gross_revenue']
@@ -65,7 +72,14 @@ class WatchListSerializer(serializers.ModelSerializer):
 #         if len(value) < 4:
 #             raise serializers.ValidationError("Title must be at least 4 characters long.")
 #         return value
+
+
 class StreamingServiceSerializer(serializers.ModelSerializer):
+    watchlists = WatchListSerializer(many=True, read_only=True)
+    # watchlists=serializers.StringRelatedField(
+    #     many=True,
+    #     read_only=True
+    # )
     class Meta:
         model = StreamingService
         fields = '__all__'

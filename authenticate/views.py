@@ -1,11 +1,54 @@
-from .models import WatchList,StreamingService 
+from .models import WatchList,StreamingService, Review 
 # from django.http import JsonResponse
-from .serializers import WatchListSerializer,StreamingServiceSerializer
+from .serializers import WatchListSerializer,StreamingServiceSerializer,ReviewSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
+
+
 
 # Create your views here.
+class ReviewDetail(mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+
+class ReviewList(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+    # def get(self, request, *args, **kwargs):
+    #     response = self.list(request, *args, **kwargs)
+    #     return Response(response.data, status=status.HTTP_200_OK)
+
+    # def post(self, request, *args, **kwargs):
+    #     response = self.create(request, *args, **kwargs)
+    #     return Response(response.data, status=status.HTTP_201_CREATED)
+
+
 
 @api_view(['GET','POST'])
 def get_watchlists(request):
