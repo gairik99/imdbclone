@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 # Create your models here.
+
+
 class StreamingService(models.Model):
     name = models.CharField(max_length=100)
     about = models.TextField(max_length=200)
@@ -10,7 +13,7 @@ class StreamingService(models.Model):
         return f"name: {self.name},"
 
 class Review(models.Model):
-    # review_user = models.CharField(max_length=100)
+    user_name = models.ForeignKey(User, related_name='user_name', on_delete=models.CASCADE)
     review_text = models.TextField()
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     watchlist = models.ForeignKey(
@@ -33,6 +36,8 @@ class WatchList(models.Model):
     service= models.ForeignKey(
         StreamingService, related_name='watchlists', on_delete=models.CASCADE, null=True, blank=True
     )
+    avg_rating = models.FloatField( default=0)
+    total_reviews = models.IntegerField(default=0)
 
     def __str__(self):
         return f"title: {self.title} "

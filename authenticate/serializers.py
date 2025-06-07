@@ -48,6 +48,8 @@ class SimpleWatchListSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 class ReviewSerializer(serializers.ModelSerializer):
+    user_name= serializers.StringRelatedField(read_only=True)
+     
     class Meta:
         model = Review
         fields = '__all__'
@@ -80,7 +82,7 @@ class WatchListSerializer(serializers.ModelSerializer):
 
 
 class StreamingServiceSerializer(serializers.ModelSerializer):
-    watchlists = SimpleWatchListSerializer(many=True, read_only=True)
+    watchlist = SimpleWatchListSerializer(many=True, read_only=True)
     # watchlists=serializers.StringRelatedField(
     #     many=True,
     #     read_only=True
