@@ -1,8 +1,10 @@
-*.sqlite3
+
+db.sqlite3
 *.zip
 django_my_site
-*.txt
-
+requirements.txt
+djangoauthorizanion/settings.py
+staticfiles
 # Python
 __pycache__/
 *.py[cod]
