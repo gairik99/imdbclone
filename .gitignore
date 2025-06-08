@@ -1,4 +1,7 @@
 *.sqlite3
+*.zip
+django_my_site
+*.txt
 
 # Python
 __pycache__/
